@@ -72,9 +72,12 @@ const controlRecipe = async () => {
 
         // Create Recipe object
         state.recipe = new Recipe(id);
+
+        // Highlight selected search item
+        if(state.search) 
+        searchView.highlightSelected(state.recipe.id);
       
-        try {
-            
+        try {   
             // Get data from server and parse ingredients
             await state.recipe.getRecipe();
             state.recipe.parseIngredients();
@@ -86,7 +89,7 @@ const controlRecipe = async () => {
             // Display recipe in UI
             clearLoader();
             recipeView.renderRecipe(state.recipe);
-
+            
         } catch(error) {
             alert('Error processing recipe. Try again.')
         }
