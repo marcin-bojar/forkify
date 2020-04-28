@@ -67,7 +67,7 @@ export default class Recipe {
                 objIng = {
                     count,
                     unit: ingArr[unitIndex],
-                    ingredient: ingArr.slice(unitIndex+1)
+                    ingredient: ingArr.slice(unitIndex+1).join(' ')
                 };
 
             } else if( parseInt(ingArr[0]) ) {
