@@ -6,6 +6,7 @@ import Likes from './models/Likes';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
+import * as likesView from './views/likesView';
 
 
 
@@ -19,7 +20,6 @@ import * as listView from './views/listView';
 */
 
 const state = {};
-
 
 /**** SEARCH CONTROLLER ****
 *****                 *****/
@@ -94,10 +94,11 @@ const controlRecipe = async () => {
     
             // Display recipe in UI
             clearLoader();
-            recipeView.renderRecipe(state.recipe);
+            recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
             
         } catch(error) {
             alert('Error processing recipe. Try again.')
+            console.log(error);
         }
     }
 }
@@ -142,9 +143,6 @@ const controlList = () => {
         //Display item in UI
         listView.renderItem(item);
     });    
-
-    
-
 };
 
 //Handling shopping buttons
@@ -168,38 +166,41 @@ elements.shopping.addEventListener('click', e => {
 /**** LIKES CONTROLLER ****
 *****                 *****/
 
+//TEST
+state.likes = new Likes();
+likesView.toggleLikeMenu(state.likes.getNumLikes());
+
 const controlLikes = () => {
     //Create likes object
     if(!state.likes) state.likes = new Likes();
-
+    
     //Check if recipe is liked
     if(!state.likes.isLiked(state.recipe.id)) {
          //If recipe is not liked, add it to state object
-        state.likes.addLike(
+       const newLike = state.likes.addLike(
             state.recipe.id,
             state.recipe.title,
             state.recipe.author,
             state.recipe.img
         );
         //Toggle the button
-
+        likesView.toggleLikeBtn(true);
 
         // Add like item to UI
-
+        likesView.renderLike(newLike);
 
     } else {
         //If recipe is liked, remove it from state object
         state.likes.removeLike(state.recipe.id);
 
         //Toggle the button
-
+        likesView.toggleLikeBtn(false);
 
         // Remove like item from UI
+        likesView.removeLike(state.recipe.id);
     }
-   
-
-    
-
+    //Display or hide like menu icon (depending on whethe)
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
 };
 
 window.s = state;
